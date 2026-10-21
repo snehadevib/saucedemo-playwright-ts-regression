@@ -1,8 +1,9 @@
 import { type Page } from '@playwright/test';
 
-// Common parent class for all page objects.
-// Contains only what every page shares: the page reference and navigation.
-
+/**
+ * Common parent class for all page objects.
+ * Contains only what every page shares: the page reference and navigation.
+ */
 export abstract class BasePage {
     readonly page: Page;
 
@@ -12,9 +13,9 @@ export abstract class BasePage {
     constructor(page: Page) {
         this.page = page;
     }
-
+    
     // Open this page (baseURL from playwright.config.ts + path)
-    async goto(){
+    async goto() {
         await this.page.goto(this.path);
     }
 }
