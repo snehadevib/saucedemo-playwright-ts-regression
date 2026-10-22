@@ -1,13 +1,16 @@
 import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 
-// All page objects that tests can request by name
+/**
+ * All page objects that tests can request by name
+ */
 type PageFixtures = {
   loginPage: LoginPage;
 };
 
 /**
- * Extended test function: provides ready-made page objects to every test.
+ * Extended test function: provides ready-made page objects to every test, so specs never create them manually.
+ * Always import `test` and `expect` from this file, not from '@playwright/test'.
  */
 export const test = base.extend<PageFixtures>({
   loginPage: async ({ page }, use) => {
@@ -15,4 +18,8 @@ export const test = base.extend<PageFixtures>({
   },
 });
 
+/** Playwright's assertion library, re-exported so specs need only one import. */
 export { expect } from '@playwright/test';
+
+/** Page object types, re-exported for use in test helpers. */
+export type { LoginPage } from '../pages/LoginPage';
