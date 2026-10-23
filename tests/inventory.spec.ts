@@ -53,4 +53,19 @@ test.describe('Inventory', () => {
             }
         },
     );
+
+    test(
+        'Inventory-003: inventory page layout is displayed',
+        { tag: ['@smoke'] },
+        async ({ inventoryPage }) => {
+            await expect(inventoryPage.title, 'page title').toHaveText('Products');
+            await expect(inventoryPage.appLogo, 'app logo').toBeVisible();
+            await expect(inventoryPage.menuButton, 'menu button').toBeVisible();
+            await expect(inventoryPage.cartLink, 'cart icon').toBeVisible();
+            // toBeHidden also passes when the badge doesn't exist, which is the case for an empty cart
+            await expect(inventoryPage.cartBadge, 'no cart badge when cart is empty').toBeHidden();
+            await expect(inventoryPage.sortDropdown, 'sort dropdown').toBeVisible();
+            await expect(inventoryPage.footer, 'footer').toBeVisible();
+        },
+    );
 });

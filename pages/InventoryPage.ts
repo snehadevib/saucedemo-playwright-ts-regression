@@ -12,12 +12,27 @@ export class InventoryPage extends BasePage {
     readonly sortDropdown: Locator;
     readonly activeSortOption: Locator;
 
+    // Header and footer (shared by all logged-in pages; candidates for a Header component later)
+    readonly title: Locator;
+    readonly appLogo: Locator;
+    readonly menuButton: Locator;
+    readonly cartLink: Locator;
+    readonly cartBadge: Locator;
+    readonly footer: Locator;
+
     constructor(page: Page) {
         super(page);
         this.inventoryItems = page.getByTestId('inventory-item');
         this.itemNames = page.getByTestId('inventory-item-name');
         this.sortDropdown = page.getByTestId('product-sort-container');
         this.activeSortOption = page.getByTestId('active-option');
+
+        this.title = page.getByTestId('title');
+        this.appLogo = page.getByText('Swag Labs', { exact: true });
+        this.menuButton = page.getByTestId('open-menu');
+        this.cartLink = page.getByTestId('shopping-cart-link');
+        this.cartBadge = page.getByTestId('shopping-cart-badge');
+        this.footer = page.getByTestId('footer');
     }
 
     // Returns the locators for the parts of one product card, found by its exact product name
