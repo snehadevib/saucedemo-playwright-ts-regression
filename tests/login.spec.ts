@@ -23,6 +23,9 @@ async function expectLoginError(loginPage: LoginPage, expectedMessage: string) {
 }
 
 test.describe('Login', () => {
+    // Login tests must start logged out, so ignore the saved session from the setup project
+    test.use({ storageState: { cookies: [], origins: [] } });
+
     test.beforeEach(async ({ loginPage }) => {
         await loginPage.goto();
     });

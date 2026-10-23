@@ -38,10 +38,26 @@ export default defineConfig({
         video: 'retain-on-failure',
     },
 
-    // Run every test in the three major browser engines
     projects: [
-        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-        { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+        // Logs in once and saves the session to playwright/.auth/ (see tests/auth.setup.ts)
+        { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
+        // Run every test in the three major browser engines, starting already logged in.
+        // Specs that need a logged-out browser opt out with test.use({ storageState: ... }).
+        {
+            name: 'chromium',
+            use: { ...devices['Desktop Chrome'], storageState: 'playwright/.auth/standard.json' },
+            dependencies: ['setup'],
+        },
+        {
+            name: 'firefox',
+            use: { ...devices['Desktop Firefox'], storageState: 'playwright/.auth/standard.json' },
+            dependencies: ['setup'],
+        },
+        {
+            name: 'webkit',
+            use: { ...devices['Desktop Safari'], storageState: 'playwright/.auth/standard.json' },
+            dependencies: ['setup'],
+        },
     ],
 });

@@ -1,11 +1,10 @@
 import { test, expect } from '../fixtures/pages';
-import { USERS, PASSWORD } from '../test-data/users';
 import { PRODUCTS } from '../test-data/products';
 
 test.describe('Inventory', () => {
-    test.beforeEach(async ({ loginPage }) => {
-        await loginPage.goto();
-        await loginPage.login(USERS.standard, PASSWORD);
+    // Already logged in via storageState from the setup project
+    test.beforeEach(async ({ inventoryPage }) => {
+        await inventoryPage.goto();
     });
 
     test(
