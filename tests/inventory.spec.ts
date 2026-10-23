@@ -68,4 +68,22 @@ test.describe('Inventory', () => {
             await expect(inventoryPage.footer, 'footer').toBeVisible();
         },
     );
+
+    test(
+        'Inventory-004: all product images are loaded',
+        { tag: ['@regression', '@ui'] },
+        async ({ inventoryPage }) => {
+            for (const product of PRODUCTS) {
+                await test.step(`image: ${product.name}`, async () => {
+                    const image = inventoryPage.productCard(product.name).image;
+                    // naturalWidth is 0 when the browser could not load the image
+                    await expect
+                        .poll(() => image.evaluate((img: HTMLImageElement) => img.naturalWidth), {
+                            message: `${product.name} image is loaded`,
+                        })
+                        .toBeGreaterThan(0);
+                });
+            }
+        },
+    );
 });
