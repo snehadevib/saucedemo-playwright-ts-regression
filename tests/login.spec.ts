@@ -19,11 +19,11 @@ async function expectLoginError(loginPage: LoginPage, expectedMessage: string) {
         await loginPage.closeErrorMessage();
         await expect(loginPage.errorMessage).toBeHidden();
         await expect(loginPage.usernameInput).not.toContainClass('error');
-    });    
+    });
 }
 
 test.describe('Login', () => {
-    test.beforeEach(async ({ loginPage}) => {
+    test.beforeEach(async ({ loginPage }) => {
         await loginPage.goto();
     });
 
@@ -96,7 +96,7 @@ test.describe('Login', () => {
             await expectLoginError(loginPage, LOGIN_ERRORS.usernameRequired);
         },
     );
-    
+
     test(
         'Login-008: direct access to the inventory page without login is blocked',
         { tag: ['@smoke', '@security'] },
@@ -108,11 +108,7 @@ test.describe('Login', () => {
         },
     );
 
-    test(
-        'Login-009: password input is masked',
-        { tag: ['@fieldValidation'] },
-        async ({ loginPage }) => {
-            await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
-        },
-    );
+    test('Login-009: password input is masked', { tag: ['@fieldValidation'] }, async ({ loginPage }) => {
+        await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
+    });
 });

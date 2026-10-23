@@ -1,7 +1,6 @@
 import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 
-
 /**
  * Inventory page object. Contains Locators and actions for the Inventory page.
  */
@@ -25,5 +24,5 @@ export class InventoryPage extends BasePage {
             image: card.getByRole('img'),
             button: card.locator('button'),
         };
-    }    
+    }
 }

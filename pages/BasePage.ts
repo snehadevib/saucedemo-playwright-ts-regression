@@ -13,7 +13,7 @@ export abstract class BasePage {
     constructor(page: Page) {
         this.page = page;
     }
-    
+
     // Open this page (baseURL from playwright.config.ts + path)
     async goto() {
         await this.page.goto(this.path);

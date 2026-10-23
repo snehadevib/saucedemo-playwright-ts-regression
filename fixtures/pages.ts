@@ -6,10 +6,10 @@ import { InventoryPage } from '../pages/InventoryPage';
  * All page objects that tests can request by name
  */
 type PageFixtures = {
-  /** Login page object (https://www.saucedemo.com/). Not navigated automatically. */
-  loginPage: LoginPage;
-  /** Inventory page object (https://www.saucedemo.com/inventory.html). Not navigated automatically. */
-  inventoryPage: InventoryPage;
+    /** Login page object (https://www.saucedemo.com/). Not navigated automatically. */
+    loginPage: LoginPage;
+    /** Inventory page object (https://www.saucedemo.com/inventory.html). Not navigated automatically. */
+    inventoryPage: InventoryPage;
 };
 
 /**
@@ -17,12 +17,12 @@ type PageFixtures = {
  * Always import `test` and `expect` from this file, not from '@playwright/test'.
  */
 export const test = base.extend<PageFixtures>({
-  loginPage: async ({ page }, use) => {
-    await use(new LoginPage(page));
-  },
-  inventoryPage: async ({ page }, use) => {
-    await use(new InventoryPage(page));
-  },
+    loginPage: async ({ page }, use) => {
+        await use(new LoginPage(page));
+    },
+    inventoryPage: async ({ page }, use) => {
+        await use(new InventoryPage(page));
+    },
 });
 
 /** Playwright's assertion library, re-exported so specs need only one import. */

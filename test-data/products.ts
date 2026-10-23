@@ -16,7 +16,7 @@ export const PRODUCTS: readonly Product[] = [
         description:
             'carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.',
         price: 29.99,
-        	image: 'sauce-backpack',
+        image: 'sauce-backpack',
     },
     {
         name: 'Sauce Labs Bike Light',

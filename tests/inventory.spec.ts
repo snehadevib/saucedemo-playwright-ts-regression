@@ -3,12 +3,12 @@ import { USERS, PASSWORD } from '../test-data/users';
 import { PRODUCTS } from '../test-data/products';
 
 test.describe('Inventory', () => {
-    test.beforeEach(async ({ loginPage}) => {
+    test.beforeEach(async ({ loginPage }) => {
         await loginPage.goto();
         await loginPage.login(USERS.standard, PASSWORD);
     });
 
-test(
+    test(
         'Inventory-001: all products are displayed with correct name, description, price, image and button',
         { tag: ['@smoke', '@ui'] },
         async ({ inventoryPage }) => {
@@ -26,7 +26,7 @@ test(
                         product.description,
                     );
                     await expect(card.price, `price is ${priceText}`).toHaveText(priceText);
-                                        await expect(card.image, `image alt text is "${product.name}"`).toHaveAttribute(
+                    await expect(card.image, `image alt text is "${product.name}"`).toHaveAttribute(
                         'alt',
                         product.name,
                     );
