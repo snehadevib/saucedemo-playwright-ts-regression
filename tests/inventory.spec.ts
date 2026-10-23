@@ -8,16 +8,31 @@ test.describe('Inventory', () => {
     });
 
     test(
+        'Inventory-002: products are sorted by Name (A to Z) by default',
+        { tag: ['@regression'] },
+        async ({ inventoryPage }) => {
+            await expect(inventoryPage.sortDropdown, 'dropdown value is "az"').toHaveValue('az');
+            await expect(inventoryPage.activeSortOption, 'label shows "Name (A to Z)"').toHaveText(
+                'Name (A to Z)',
+            );
+            await expect(inventoryPage.itemNames, 'products listed A to Z').toHaveText(
+                PRODUCTS.map((p) => p.name),
+            );
+        },
+    );
+
+    test(
         'Inventory-001: all products are displayed with correct name, description, price, image and button',
-        { tag: ['@smoke', '@ui'] },
+        { tag: ['@regression'] },
         async ({ inventoryPage }) => {
             await test.step(`all ${PRODUCTS.length} products are displayed`, async () => {
                 await expect(inventoryPage.inventoryItems).toHaveCount(PRODUCTS.length);
             });
 
-            for (const [i, product] of PRODUCTS.entries()) {
-                await test.step(`product card ${i + 1}: ${product.name}`, async () => {
-                    const card = inventoryPage.productCard(i);
+            // Each product is found by its name, so this test doesn't depend on the sort order
+            for (const product of PRODUCTS) {
+                await test.step(`product: ${product.name}`, async () => {
+                    const card = inventoryPage.productCard(product.name);
                     const priceText = `$${product.price.toFixed(2)}`;
 
                     await expect(card.name, `name is "${product.name}"`).toHaveText(product.name);
@@ -33,7 +48,7 @@ test.describe('Inventory', () => {
                         'src',
                         new RegExp(`/${product.image}-`),
                     );
-                    await expect(card.button, 'button says "Add to cart"').toHaveText('Add to cart');
+                    await expect(card.addToCartButton, 'shows "Add to cart" button').toBeVisible();
                 });
             }
         },
