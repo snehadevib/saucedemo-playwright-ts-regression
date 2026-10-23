@@ -86,4 +86,63 @@ test.describe('Inventory', () => {
             }
         },
     );
+
+    test.describe('Sorting', () => {
+        // Expected orders are calculated from the catalogue, so they stay correct if it changes
+        const names = PRODUCTS.map((p) => p.name);
+        const namesAtoZ = [...names].sort((a, b) => a.localeCompare(b));
+        const namesZtoA = [...namesAtoZ].reverse();
+        // Price sorts compare prices, not names: two products share $15.99, so their order is undefined
+        const prices = PRODUCTS.map((p) => p.price);
+        const asPriceText = (list: number[]) => list.map((price) => `$${price.toFixed(2)}`);
+        const pricesLowToHigh = asPriceText([...prices].sort((a, b) => a - b));
+        const pricesHighToLow = asPriceText([...prices].sort((a, b) => b - a));
+
+        test('Inventory-005: sort by Name (Z to A)', { tag: ['@regression'] }, async ({ inventoryPage }) => {
+            await inventoryPage.sortBy('za');
+
+            await expect(inventoryPage.activeSortOption, 'label').toHaveText('Name (Z to A)');
+            await expect(inventoryPage.itemNames, 'names Z to A').toHaveText(namesZtoA);
+        });
+
+        test(
+            'Inventory-006: sort by Price (low to high)',
+            { tag: ['@regression'] },
+            async ({ inventoryPage }) => {
+                await inventoryPage.sortBy('lohi');
+
+                await expect(inventoryPage.activeSortOption, 'label').toHaveText('Price (low to high)');
+                await expect(inventoryPage.itemPrices, 'prices ascending').toHaveText(pricesLowToHigh);
+            },
+        );
+
+        test(
+            'Inventory-007: sort by Price (high to low)',
+            { tag: ['@regression'] },
+            async ({ inventoryPage }) => {
+                await inventoryPage.sortBy('hilo');
+
+                await expect(inventoryPage.activeSortOption, 'label').toHaveText('Price (high to low)');
+                await expect(inventoryPage.itemPrices, 'prices descending').toHaveText(pricesHighToLow);
+            },
+        );
+
+        test(
+            'Inventory-008: sort order resets to Name (A to Z) after reload',
+            { tag: ['@regression'] },
+            async ({ inventoryPage, page }) => {
+                await test.step('sort Z to A', async () => {
+                    await inventoryPage.sortBy('za');
+                    await expect(inventoryPage.itemNames).toHaveText(namesZtoA);
+                });
+
+                await test.step('reload: default sort is back', async () => {
+                    await page.reload();
+                    await expect(inventoryPage.sortDropdown, 'value').toHaveValue('az');
+                    await expect(inventoryPage.activeSortOption, 'label').toHaveText('Name (A to Z)');
+                    await expect(inventoryPage.itemNames, 'names A to Z').toHaveText(namesAtoZ);
+                });
+            },
+        );
+    });
 });

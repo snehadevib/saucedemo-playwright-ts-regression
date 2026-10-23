@@ -1,6 +1,9 @@
 import { type Page, type Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 
+/** Values of the sort dropdown options. */
+export type SortOption = 'az' | 'za' | 'lohi' | 'hilo';
+
 /**
  * Inventory page object. Contains Locators and actions for the Inventory page.
  */
@@ -9,6 +12,7 @@ export class InventoryPage extends BasePage {
 
     readonly inventoryItems: Locator;
     readonly itemNames: Locator;
+    readonly itemPrices: Locator;
     readonly sortDropdown: Locator;
     readonly activeSortOption: Locator;
 
@@ -24,6 +28,7 @@ export class InventoryPage extends BasePage {
         super(page);
         this.inventoryItems = page.getByTestId('inventory-item');
         this.itemNames = page.getByTestId('inventory-item-name');
+        this.itemPrices = page.getByTestId('inventory-item-price');
         this.sortDropdown = page.getByTestId('product-sort-container');
         this.activeSortOption = page.getByTestId('active-option');
 
@@ -33,6 +38,11 @@ export class InventoryPage extends BasePage {
         this.cartLink = page.getByTestId('shopping-cart-link');
         this.cartBadge = page.getByTestId('shopping-cart-badge');
         this.footer = page.getByTestId('footer');
+    }
+
+    // Choose a sort order from the dropdown
+    async sortBy(option: SortOption) {
+        await this.sortDropdown.selectOption(option);
     }
 
     // Returns the locators for the parts of one product card, found by its exact product name
