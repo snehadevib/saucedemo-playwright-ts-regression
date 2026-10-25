@@ -32,6 +32,10 @@ export default defineConfig({
     // Limit the whole test run, so that it fails with a report instead of hanging.
     globalTimeout: 30 * 60 * 1000,
 
+    // Time limit per test. Tests that open many pages need room for slow users;
+    // each single page load is judged separately (test-data/performance.ts).
+    timeout: 60_000,
+
     // HTML report + readable console output
     reporter: [['html', { open: 'never' }], ['list']],
 
@@ -39,8 +43,7 @@ export default defineConfig({
         // Base URL to use in actions like `await page.goto('/')`.
         baseURL: 'https://www.saucedemo.com',
 
-        // Headed locally for visibility; headless on CI (no display available)
-        headless: !!process.env.CI,
+        // Headless by default (fast, stable timings); use `npm run test:headed` or `npm run test:ui` to watch
 
         // Saucedemo marks elements with data-test="..." -> page.getByTestId('...')
         testIdAttribute: 'data-test',

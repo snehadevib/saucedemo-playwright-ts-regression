@@ -1,6 +1,7 @@
 import { test, expect, type InventoryPage, type ProductDetailsPage } from '../fixtures/pages';
 import { PRODUCTS } from '../test-data/products';
 import { FOOTER } from '../test-data/footer';
+import { PAGE_LOAD } from '../test-data/performance';
 
 // Expected name orders, calculated from the catalogue so they stay correct if it changes
 const namesAtoZ = PRODUCTS.map((p) => p.name).sort((a, b) => a.localeCompare(b));
@@ -85,6 +86,8 @@ test.describe('Inventory', () => {
                     await expect
                         .poll(() => image.evaluate((img: HTMLImageElement) => img.naturalWidth), {
                             message: `${product.name} image is loaded`,
+                            // Same hard limit as page loads: images can be slow when many browsers run at once
+                            timeout: PAGE_LOAD.failAfterMs,
                         })
                         .toBeGreaterThan(0);
                 });
@@ -159,7 +162,10 @@ test.describe('Inventory', () => {
             for (const product of PRODUCTS) {
                 await test.step(`open: ${product.name}`, async () => {
                     await inventoryPage.goto();
+                    // Time the details page load from the click (warning over budget, failure over the hard limit)
+                    const clickedAt = Date.now();
                     await inventoryPage.productCard(product.name)[link].click();
+                    await productDetailsPage.waitUntilLoaded(clickedAt);
 
                     await expect(productDetailsPage.page, 'details page URL').toHaveURL(
                         /\/inventory-item\.html\?id=\d+$/,

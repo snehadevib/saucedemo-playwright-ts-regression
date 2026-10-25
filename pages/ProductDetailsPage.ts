@@ -7,6 +7,8 @@ import { BasePage } from './BasePage';
 export class ProductDetailsPage extends BasePage {
     // The product is chosen with ?id=N, so this path alone doesn't open a product
     readonly path = '/inventory-item.html';
+    readonly pageName = 'Product details page';
+    readonly readyIndicator: Locator;
 
     readonly name: Locator;
     readonly description: Locator;
@@ -19,5 +21,7 @@ export class ProductDetailsPage extends BasePage {
         this.description = page.getByTestId('inventory-item-desc');
         this.price = page.getByTestId('inventory-item-price');
         this.backButton = page.getByTestId('back-to-products');
+        // Must only exist on this page: the inventory page also has 'inventory-item-name'
+        this.readyIndicator = this.backButton;
     }
 }

@@ -6,6 +6,8 @@ import { BasePage } from './BasePage';
  */
 export class LoginPage extends BasePage {
     readonly path = '/';
+    readonly pageName = 'Login page';
+    readonly readyIndicator: Locator;
 
     readonly usernameInput: Locator;
     readonly passwordInput: Locator;
@@ -20,6 +22,7 @@ export class LoginPage extends BasePage {
         this.loginButton = page.getByTestId('login-button');
         this.errorMessage = page.getByTestId('error');
         this.errorCloseButton = page.getByTestId('error-button');
+        this.readyIndicator = this.loginButton;
     }
 
     // Fill in the Login form and submit it.

@@ -9,6 +9,8 @@ export type SortOption = 'az' | 'za' | 'lohi' | 'hilo';
  */
 export class InventoryPage extends BasePage {
     readonly path = '/inventory.html';
+    readonly pageName = 'Inventory page';
+    readonly readyIndicator: Locator;
 
     readonly inventoryItems: Locator;
     readonly itemNames: Locator;
@@ -33,6 +35,8 @@ export class InventoryPage extends BasePage {
         this.inventoryItems = page.getByTestId('inventory-item');
         this.itemNames = page.getByTestId('inventory-item-name');
         this.itemPrices = page.getByTestId('inventory-item-price');
+        // Loaded once the first product is shown
+        this.readyIndicator = this.inventoryItems.first();
         this.sortDropdown = page.getByTestId('product-sort-container');
         this.activeSortOption = page.getByTestId('active-option');
 
