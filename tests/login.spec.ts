@@ -1,5 +1,5 @@
 import { test, expect, type LoginPage } from '../fixtures/pages';
-import { USERS, PASSWORD } from '../test-data/users';
+import { USERS, PASSWORD, TEST_USERS, INVALID_CREDENTIALS } from '../test-data/users';
 import { LOGIN_ERRORS } from '../test-data/messages';
 
 /**
@@ -31,17 +31,30 @@ test.describe('Login', () => {
     });
 
     test(
-        'Login-001: valid login with standard_user opens the inventory page',
-        { tag: ['@functional', '@smoke'] },
-        async ({ loginPage, page }) => {
-            await loginPage.login(USERS.standard, PASSWORD);
+        'Login-001: valid credentials open the inventory page',
+        { tag: ['@smoke'] },
+        async ({ loginPage, inventoryPage, page }) => {
+            // Data-driven: every user in TEST_USERS must be able to log in (one step per user)
+            for (const { username } of Object.values(TEST_USERS)) {
+                await test.step(`log in as ${username}`, async () => {
+                    await loginPage.goto();
+                    await loginPage.login(username, PASSWORD);
 
-            await expect(page).toHaveURL(/inventory\.html/);
+                    // Soft: a user that can't log in is reported, and the remaining users are still checked
+                    await expect.soft(page, 'inventory page opens').toHaveURL(/inventory\.html/);
+                    await expect
+                        .soft(inventoryPage.inventoryItems.first(), 'products are shown')
+                        .toBeVisible();
+
+                    // Log out for the next user: the session is only a cookie
+                    await page.context().clearCookies();
+                });
+            }
         },
     );
 
     test(
-        'Login-002: locked_out_user gets the locked-out error message',
+        'Login-002: a locked account is refused with the locked-out error message',
         { tag: ['@smoke', '@negative'] },
         async ({ loginPage }) => {
             await loginPage.login(USERS.lockedOut, PASSWORD);
@@ -51,20 +64,20 @@ test.describe('Login', () => {
     );
 
     test(
-        'Login-003: wrong password for standard_user gets the invalid credentials error message',
-        { tag: ['@negative'] },
+        'Login-003: a wrong password is refused with the invalid credentials error message',
+        { tag: ['@regression', '@negative'] },
         async ({ loginPage }) => {
-            await loginPage.login(USERS.standard, 'wrongpassword');
+            await loginPage.login(USERS.standard, INVALID_CREDENTIALS.wrongPassword);
 
             await expectLoginError(loginPage, LOGIN_ERRORS.invalidCredentials);
         },
     );
 
     test(
-        'Login-004: unknown username gets the invalid credentials error message',
-        { tag: ['@negative'] },
+        'Login-004: an unknown username is refused with the invalid credentials error message',
+        { tag: ['@regression', '@negative'] },
         async ({ loginPage }) => {
-            await loginPage.login('unknown_user', PASSWORD);
+            await loginPage.login(INVALID_CREDENTIALS.unknownUsername, PASSWORD);
 
             await expectLoginError(loginPage, LOGIN_ERRORS.invalidCredentials);
         },
@@ -72,7 +85,7 @@ test.describe('Login', () => {
 
     test(
         'Login-005: empty username gets the username required error message',
-        { tag: ['@fieldValidation'] },
+        { tag: ['@regression', '@fieldValidation'] },
         async ({ loginPage }) => {
             await loginPage.login('', PASSWORD);
 
@@ -82,7 +95,7 @@ test.describe('Login', () => {
 
     test(
         'Login-006: empty password gets the password required error message',
-        { tag: ['@fieldValidation'] },
+        { tag: ['@regression', '@fieldValidation'] },
         async ({ loginPage }) => {
             await loginPage.login(USERS.standard, '');
 
@@ -92,7 +105,7 @@ test.describe('Login', () => {
 
     test(
         'Login-007: empty username and password gets the username required error message',
-        { tag: ['@fieldValidation'] },
+        { tag: ['@regression', '@fieldValidation'] },
         async ({ loginPage }) => {
             await loginPage.login('', '');
 
@@ -111,7 +124,11 @@ test.describe('Login', () => {
         },
     );
 
-    test('Login-009: password input is masked', { tag: ['@fieldValidation'] }, async ({ loginPage }) => {
-        await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
-    });
+    test(
+        'Login-009: password input is masked',
+        { tag: ['@regression', '@fieldValidation'] },
+        async ({ loginPage }) => {
+            await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
+        },
+    );
 });
