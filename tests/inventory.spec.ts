@@ -1,8 +1,13 @@
-import { test, expect } from '../fixtures/pages';
+import { test, expect, type InventoryPage, type ProductDetailsPage } from '../fixtures/pages';
 import { PRODUCTS } from '../test-data/products';
+import { FOOTER } from '../test-data/footer';
+
+// Expected name orders, calculated from the catalogue so they stay correct if it changes
+const namesAtoZ = PRODUCTS.map((p) => p.name).sort((a, b) => a.localeCompare(b));
+const namesZtoA = [...namesAtoZ].reverse();
 
 test.describe('Inventory', () => {
-    // Already logged in via storageState from the setup project
+    // Already logged in: each project starts with its user's saved session (see TEST_USERS)
     test.beforeEach(async ({ inventoryPage }) => {
         await inventoryPage.goto();
     });
@@ -88,10 +93,6 @@ test.describe('Inventory', () => {
     );
 
     test.describe('Sorting', () => {
-        // Expected orders are calculated from the catalogue, so they stay correct if it changes
-        const names = PRODUCTS.map((p) => p.name);
-        const namesAtoZ = [...names].sort((a, b) => a.localeCompare(b));
-        const namesZtoA = [...namesAtoZ].reverse();
         // Price sorts compare prices, not names: two products share $15.99, so their order is undefined
         const prices = PRODUCTS.map((p) => p.price);
         const asPriceText = (list: number[]) => list.map((price) => `$${price.toFixed(2)}`);
@@ -145,4 +146,67 @@ test.describe('Inventory', () => {
             },
         );
     });
+
+    test.describe('Product details', () => {
+        type LinkPart = 'nameLink' | 'imageLink';
+
+        // Click the given link of every product and check its details page matches the catalogue
+        async function openEachProductBy(
+            link: LinkPart,
+            inventoryPage: InventoryPage,
+            productDetailsPage: ProductDetailsPage,
+        ) {
+            for (const product of PRODUCTS) {
+                await test.step(`open: ${product.name}`, async () => {
+                    await inventoryPage.goto();
+                    await inventoryPage.productCard(product.name)[link].click();
+
+                    await expect(productDetailsPage.page, 'details page URL').toHaveURL(
+                        /\/inventory-item\.html\?id=\d+$/,
+                    );
+                    await expect(productDetailsPage.name, 'name').toHaveText(product.name);
+                    await expect(productDetailsPage.description, 'description').toHaveText(
+                        product.description,
+                    );
+                    await expect(productDetailsPage.price, 'price').toHaveText(
+                        `$${product.price.toFixed(2)}`,
+                    );
+                    await expect(productDetailsPage.backButton, 'back button').toBeVisible();
+                });
+            }
+        }
+
+        test(
+            'Inventory-009: clicking a product name opens its details page',
+            { tag: ['@regression'] },
+            async ({ inventoryPage, productDetailsPage }) => {
+                await openEachProductBy('nameLink', inventoryPage, productDetailsPage);
+            },
+        );
+
+        test(
+            'Inventory-010: clicking a product image opens its details page',
+            { tag: ['@regression'] },
+            async ({ inventoryPage, productDetailsPage }) => {
+                await openEachProductBy('imageLink', inventoryPage, productDetailsPage);
+            },
+        );
+    });
+
+    test(
+        'Inventory-011: footer shows copyright and social links',
+        { tag: ['@regression', '@ui'] },
+        async ({ inventoryPage }) => {
+            await expect(inventoryPage.footerCopy, 'copyright text').toHaveText(FOOTER.copyright);
+            await expect(inventoryPage.socialX, 'X link').toHaveAttribute('href', FOOTER.socialLinks.x);
+            await expect(inventoryPage.socialFacebook, 'Facebook link').toHaveAttribute(
+                'href',
+                FOOTER.socialLinks.facebook,
+            );
+            await expect(inventoryPage.socialLinkedIn, 'LinkedIn link').toHaveAttribute(
+                'href',
+                FOOTER.socialLinks.linkedIn,
+            );
+        },
+    );
 });

@@ -44,7 +44,10 @@ export default tseslint.config(
             'playwright/no-page-pause': 'error',
             'playwright/prefer-web-first-assertions': 'error',
             // Shared assertion helpers count as assertions (add new helpers here)
-            'playwright/expect-expect': ['warn', { assertFunctionNames: ['expectLoginError'] }],
+            'playwright/expect-expect': [
+                'warn',
+                { assertFunctionNames: ['expectLoginError', 'openEachProductBy'] },
+            ],
         },
     },
 

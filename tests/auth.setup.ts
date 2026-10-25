@@ -1,14 +1,15 @@
 import { test as setup, expect } from '../fixtures/pages';
-import { USERS, PASSWORD } from '../test-data/users';
+import { PASSWORD, TEST_USERS } from '../test-data/users';
 
-const authFile = 'playwright/.auth/standard.json';
+// One saved session per row in TEST_USERS
+for (const { username, authFile } of Object.values(TEST_USERS)) {
+    setup(`authenticate as ${username}`, async ({ loginPage, inventoryPage, page }) => {
+        await loginPage.goto();
+        await loginPage.login(username, PASSWORD);
 
-setup('authenticate as standard_user', async ({ loginPage, inventoryPage, page }) => {
-    await loginPage.goto();
-    await loginPage.login(USERS.standard, PASSWORD);
+        // Make sure login really worked before saving the session
+        await expect(inventoryPage.inventoryItems.first()).toBeVisible();
 
-    // Make sure login really worked before saving the session
-    await expect(inventoryPage.inventoryItems.first()).toBeVisible();
-
-    await page.context().storageState({ path: authFile });
-});
+        await page.context().storageState({ path: authFile });
+    });
+}
