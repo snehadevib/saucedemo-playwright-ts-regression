@@ -57,6 +57,16 @@ export class InventoryPage extends BasePage {
         await this.sortDropdown.selectOption(option);
     }
 
+    // Add a product to the cart from the inventory page
+    async addToCart(name: string) {
+        await this.productCard(name).addToCartButton.click();
+    }
+
+    // Remove a product from the cart from the inventory page
+    async removeFromCart(name: string) {
+        await this.productCard(name).removeButton.click();
+    }
+
     // Returns the locators for the parts of one product card, found by its exact product name
     productCard(name: string) {
         const card = this.inventoryItems.filter({
