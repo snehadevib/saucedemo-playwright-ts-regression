@@ -17,8 +17,24 @@ export abstract class BasePage {
     // An element that is only shown once the page has loaded, e.g. the product list
     abstract readonly readyIndicator: Locator;
 
+    // Header parts shown on every logged-in page (inventory, details, cart)
+    readonly cartLink: Locator;
+    readonly cartBadge: Locator;
+
     constructor(page: Page) {
         this.page = page;
+        this.cartLink = page.getByTestId('shopping-cart-link');
+        this.cartBadge = page.getByTestId('shopping-cart-badge');
+    }
+
+    /**
+     * Click something that opens this page, and wait until it has loaded.
+     * The load is timed from the click (warning over budget, failure over the hard limit).
+     */
+    async openBy(link: Locator) {
+        const clickedAt = Date.now();
+        await link.click();
+        await this.waitUntilLoaded(clickedAt);
     }
 
     // Open this page (baseURL from playwright.config.ts + path) and wait until it has loaded

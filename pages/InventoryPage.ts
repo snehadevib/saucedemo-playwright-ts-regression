@@ -18,12 +18,10 @@ export class InventoryPage extends BasePage {
     readonly sortDropdown: Locator;
     readonly activeSortOption: Locator;
 
-    // Header and footer (shared by all logged-in pages; candidates for a Header component later)
+    // Header and footer (cart icon and badge are in BasePage; the rest are candidates for a Header component later)
     readonly title: Locator;
     readonly appLogo: Locator;
     readonly menuButton: Locator;
-    readonly cartLink: Locator;
-    readonly cartBadge: Locator;
     readonly footer: Locator;
     readonly footerCopy: Locator;
     readonly socialX: Locator;
@@ -43,8 +41,6 @@ export class InventoryPage extends BasePage {
         this.title = page.getByTestId('title');
         this.appLogo = page.getByText('Swag Labs', { exact: true });
         this.menuButton = page.getByTestId('open-menu');
-        this.cartLink = page.getByTestId('shopping-cart-link');
-        this.cartBadge = page.getByTestId('shopping-cart-badge');
         this.footer = page.getByTestId('footer');
         this.footerCopy = page.getByTestId('footer-copy');
         this.socialX = page.getByTestId('social-x');

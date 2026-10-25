@@ -114,13 +114,18 @@ test.describe('Login', () => {
     );
 
     test(
-        'Login-008: direct access to the inventory page without login is blocked',
+        'Login-008: protected pages cannot be opened without login',
         { tag: ['@smoke', '@security'] },
-        async ({ loginPage, page }) => {
-            await page.goto('/inventory.html');
+        async ({ loginPage, inventoryPage, cartPage, page }) => {
+            // Data-driven: every page that needs a login (add new protected pages here)
+            for (const protectedPage of [inventoryPage, cartPage]) {
+                await test.step(`open ${protectedPage.path} without login`, async () => {
+                    await page.goto(protectedPage.path);
 
-            await expect(page).not.toHaveURL(/inventory\.html/);
-            await expectLoginError(loginPage, LOGIN_ERRORS.notLoggedIn);
+                    await expect(page, 'stays on the login page').not.toHaveURL(protectedPage.path);
+                    await expectLoginError(loginPage, LOGIN_ERRORS.notLoggedIn(protectedPage.path));
+                });
+            }
         },
     );
 

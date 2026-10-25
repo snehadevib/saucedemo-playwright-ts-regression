@@ -16,6 +16,8 @@ export class CartPage extends BasePage {
     readonly itemQuantities: Locator;
     readonly continueShoppingButton: Locator;
     readonly checkoutButton: Locator;
+    readonly quantityLabel: Locator;
+    readonly descriptionLabel: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -26,7 +28,27 @@ export class CartPage extends BasePage {
         this.itemQuantities = page.getByTestId('item-quantity');
         this.continueShoppingButton = page.getByTestId('continue-shopping');
         this.checkoutButton = page.getByTestId('checkout');
+        this.quantityLabel = page.getByTestId('cart-quantity-label');
+        this.descriptionLabel = page.getByTestId('cart-desc-label');
         // Only exists on the cart page (an empty cart has no items, but always has this button)
         this.readyIndicator = this.checkoutButton;
+    }
+
+    // Returns the locators for one item in the cart, found by its exact product name
+    cartItem(name: string) {
+        const item = this.cartItems.filter({
+            has: this.page.getByTestId('inventory-item-name').getByText(name, { exact: true }),
+        });
+        return {
+            // Opens the product details page (the cart shows no image, only the name link)
+            nameLink: item.getByTestId(/^item-\d+-title-link$/),
+            quantity: item.getByTestId('item-quantity'),
+            removeButton: item.getByRole('button', { name: 'Remove' }),
+        };
+    }
+
+    // Remove a product from the cart on the cart page
+    async removeFromCart(name: string) {
+        await this.cartItem(name).removeButton.click();
     }
 }
