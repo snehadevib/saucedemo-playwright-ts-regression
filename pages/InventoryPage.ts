@@ -23,6 +23,10 @@ export class InventoryPage extends BasePage {
     readonly cartLink: Locator;
     readonly cartBadge: Locator;
     readonly footer: Locator;
+    readonly footerCopy: Locator;
+    readonly socialX: Locator;
+    readonly socialFacebook: Locator;
+    readonly socialLinkedIn: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -38,6 +42,10 @@ export class InventoryPage extends BasePage {
         this.cartLink = page.getByTestId('shopping-cart-link');
         this.cartBadge = page.getByTestId('shopping-cart-badge');
         this.footer = page.getByTestId('footer');
+        this.footerCopy = page.getByTestId('footer-copy');
+        this.socialX = page.getByTestId('social-x');
+        this.socialFacebook = page.getByTestId('social-facebook');
+        this.socialLinkedIn = page.getByTestId('social-linkedin');
     }
 
     // Choose a sort order from the dropdown
@@ -55,6 +63,9 @@ export class InventoryPage extends BasePage {
             description: card.getByTestId('inventory-item-desc'),
             price: card.getByTestId('inventory-item-price'),
             image: card.getByRole('img'),
+            // Links to the details page; N in item-N is the product id, not the position on the page
+            nameLink: card.getByTestId(/^item-\d+-title-link$/),
+            imageLink: card.getByTestId(/^item-\d+-img-link$/),
             addToCartButton: card.getByRole('button', { name: 'Add to cart' }),
             removeButton: card.getByRole('button', { name: 'Remove' }),
         };
