@@ -2,8 +2,6 @@ import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { ProductDetailsPage } from '../pages/ProductDetailsPage';
-import { KNOWN_DEFECTS } from '../test-data/known-defects';
-import { type TestUser } from '../test-data/users';
 
 /**
  * All page objects that tests can request by name
@@ -15,8 +13,6 @@ type PageFixtures = {
     inventoryPage: InventoryPage;
     /** Product details page object (https://www.saucedemo.com/inventory-item.html?id=N). Not navigated automatically. */
     productDetailsPage: ProductDetailsPage;
-    /** Runs automatically: adds a "bug" annotation when this test + user is in KNOWN_DEFECTS. */
-    knownDefectAnnotation: void;
 };
 
 /**
@@ -24,24 +20,6 @@ type PageFixtures = {
  * Always import `test` and `expect` from this file, not from '@playwright/test'.
  */
 export const test = base.extend<PageFixtures>({
-    knownDefectAnnotation: [
-        // Playwright requires the object pattern here even when no other fixtures are used
-        async ({}, use, testInfo) => {
-            const user = (testInfo.project.metadata as { user?: TestUser }).user;
-            const testId = /^[A-Za-z]+-\d{3}/.exec(testInfo.title)?.[0];
-
-            for (const defect of KNOWN_DEFECTS) {
-                if (defect.testId === testId && (defect.user === 'all' || defect.user === user)) {
-                    testInfo.annotations.push({
-                        type: 'bug',
-                        description: `${defect.bug}: ${defect.description}`,
-                    });
-                }
-            }
-            await use();
-        },
-        { auto: true },
-    ],
     loginPage: async ({ page }, use) => {
         await use(new LoginPage(page));
     },
