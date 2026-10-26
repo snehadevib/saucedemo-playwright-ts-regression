@@ -27,4 +27,13 @@ export class CheckoutCompletePage extends BasePage {
         // The confirmation header only exists here (the details page also has a 'back-to-products' button)
         this.readyIndicator = this.header;
     }
+
+    // Click "Generate PDF order" and return the downloaded receipt
+    async downloadReceipt() {
+        const [download] = await Promise.all([
+            this.page.waitForEvent('download'),
+            this.generatePdfButton.click(),
+        ]);
+        return download;
+    }
 }

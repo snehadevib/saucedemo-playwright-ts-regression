@@ -19,6 +19,22 @@ export const ORDER_COMPLETE = {
     text: 'Your order has been dispatched, and will arrive just as fast as the pony can get there!',
 } as const;
 
+/** Fixed texts in the PDF order receipt (Generate PDF order). */
+export const RECEIPT = {
+    title: 'Swag Labs',
+    subtitle: 'Order Receipt',
+    orderDateLabel: 'Order Date',
+    // Section headings, printed with letter spacing (compare with withoutSpaces)
+    sectionHeadings: ['ORDER DETAILS', 'SHIP TO', 'ITEMS'],
+    itemTotalLabel: 'Item total',
+    taxLabel: 'Tax',
+    totalLabel: 'Total',
+    thankYou:
+        'Thank you for your order! It has been dispatched, and will arrive just as fast as the pony can get there.',
+    // swag-labs-order-2026-10-26_17-03-47.pdf: order date and time
+    fileName: /^swag-labs-order-(\d{4}-\d{2}-\d{2})_\d{2}-\d{2}-\d{2}\.pdf$/,
+} as const;
+
 /** Errors on the checkout information page. */
 export const CHECKOUT_ERRORS = {
     firstNameRequired: 'Error: First Name is required',
