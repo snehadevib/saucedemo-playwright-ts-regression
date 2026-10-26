@@ -116,9 +116,24 @@ test.describe('Login', () => {
     test(
         'Login-008: protected pages cannot be opened without login',
         { tag: ['@smoke', '@security'] },
-        async ({ loginPage, inventoryPage, cartPage, page }) => {
+        async ({
+            loginPage,
+            inventoryPage,
+            cartPage,
+            checkoutInformationPage,
+            checkoutOverviewPage,
+            checkoutCompletePage,
+            page,
+        }) => {
             // Data-driven: every page that needs a login (add new protected pages here)
-            for (const protectedPage of [inventoryPage, cartPage]) {
+            const protectedPages = [
+                inventoryPage,
+                cartPage,
+                checkoutInformationPage,
+                checkoutOverviewPage,
+                checkoutCompletePage,
+            ];
+            for (const protectedPage of protectedPages) {
                 await test.step(`open ${protectedPage.path} without login`, async () => {
                     await page.goto(protectedPage.path);
 

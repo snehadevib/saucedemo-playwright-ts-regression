@@ -27,6 +27,23 @@ export abstract class BasePage {
         this.cartBadge = page.getByTestId('shopping-cart-badge');
     }
 
+    // Open this page's URL directly, without waiting for it to load (e.g. to check that it is blocked)
+    async openUrlDirectly() {
+        await this.page.goto(this.path);
+    }
+
+    // Reload the current page and wait until this page has loaded again
+    async reload() {
+        const start = Date.now();
+        await this.page.reload();
+        await this.waitUntilLoaded(start);
+    }
+
+    // Browser Back button
+    async goBack() {
+        await this.page.goBack();
+    }
+
     /**
      * Click something that opens this page, and wait until it has loaded.
      * The load is timed from the click (warning over budget, failure over the hard limit).
