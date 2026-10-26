@@ -51,7 +51,7 @@ test.describe('Checkout', () => {
     test.describe('Information', () => {
         test(
             'Checkout-001: required fields on the information page show an error that can be closed',
-            { tag: ['@regression', '@fieldValidation'] },
+            { tag: ['@fieldLevel'] },
             async ({ checkout, checkoutInformationPage: infoPage }) => {
                 await checkout.start([first]);
 
@@ -97,7 +97,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-002: fields with only spaces are not accepted',
-            { tag: ['@regression', '@fieldValidation'] },
+            { tag: ['@fieldLevel'] },
             async ({ checkout, checkoutInformationPage: infoPage }) => {
                 // Assumed requirement: spaces-only input counts as empty
                 knownBugInGate(KNOWN_BUGS.spacesOnlyAccepted);
@@ -115,7 +115,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-003: cancel on the information page returns to the cart unchanged',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ checkout, checkoutInformationPage: infoPage, cartPage }) => {
                 await checkout.start([first]);
 
@@ -132,7 +132,7 @@ test.describe('Checkout', () => {
     test.describe('Overview', () => {
         test(
             'Checkout-004: the overview lists the ordered products',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ checkout, checkoutOverviewPage: overview }) => {
                 const { products } = typicalOrder;
                 await checkout.reachOverview(products, customer);
@@ -153,7 +153,7 @@ test.describe('Checkout', () => {
         for (const scenario of ORDER_SCENARIOS) {
             test(
                 `Checkout-005: item total, tax and total are correct (${scenario.name})`,
-                { tag: ['@regression'] },
+                { tag: ['@functional'] },
                 async ({ checkout, checkoutOverviewPage: overview }) => {
                     knownBugInGate(OVERVIEW_KNOWN_BUGS[scenario.name]);
                     await checkout.reachOverview(scenario.products, scenario.customer);
@@ -171,7 +171,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-006: the overview shows payment and shipping information',
-            { tag: ['@regression'] },
+            { tag: ['@functional'] },
             async ({ checkout, checkoutOverviewPage: overview }) => {
                 await checkout.reachOverview(typicalOrder.products, customer);
 
@@ -185,7 +185,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-007: the overview is kept after a page reload',
-            { tag: ['@regression'] },
+            { tag: ['@functional'] },
             async ({ checkout, checkoutOverviewPage: overview }) => {
                 const { products } = typicalOrder;
                 await checkout.reachOverview(products, customer);
@@ -202,7 +202,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-008: cancel on the overview returns to the inventory page with the cart unchanged',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ checkout, checkoutOverviewPage: overview, inventoryPage }) => {
                 const { products } = typicalOrder;
                 await checkout.reachOverview(products, customer);
@@ -223,7 +223,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-009: no order can be placed with an empty cart',
-            { tag: ['@regression', '@negative'] },
+            { tag: ['@negative'] },
             async ({ checkout, checkoutOverviewPage: overview, checkoutCompletePage: complete }) => {
                 // Assumed requirement: Finish is disabled, or clicking it does not confirm an order
                 knownBugInGate(KNOWN_BUGS.emptyOrder);
@@ -238,7 +238,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-010: the overview cannot be opened directly without the information step',
-            { tag: ['@regression', '@negative'] },
+            { tag: ['@negative', '@security'] },
             async ({ inventoryPage, checkoutOverviewPage: overview }) => {
                 // Assumed requirement: skipping the information step by URL is not possible
                 knownBugInGate(KNOWN_BUGS.stepsSkippableByUrl);
@@ -256,7 +256,7 @@ test.describe('Checkout', () => {
     test.describe('Complete', () => {
         test(
             'Checkout-011: the complete page confirms the order',
-            { tag: ['@regression'] },
+            { tag: ['@functional', '@ui'] },
             async ({ checkout, checkoutCompletePage: complete }) => {
                 await checkout.placeOrder(typicalOrder.products, customer);
 
@@ -272,7 +272,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-012: Back Home returns to the inventory page with an empty cart',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ checkout, checkoutCompletePage: complete, inventoryPage }) => {
                 const { products } = typicalOrder;
                 await checkout.placeOrder(products, customer);
@@ -293,7 +293,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-013: the complete page cannot be opened directly without an order',
-            { tag: ['@regression', '@negative'] },
+            { tag: ['@negative', '@security'] },
             async ({ checkoutCompletePage: complete }) => {
                 // Assumed requirement: no order confirmation without an order
                 knownBugInGate(KNOWN_BUGS.stepsSkippableByUrl);
@@ -310,7 +310,7 @@ test.describe('Checkout', () => {
     test.describe('Navigation', () => {
         test(
             'Checkout-014: the cart icon on the checkout pages leads to the unchanged cart',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({
                 checkout,
                 cartPage,
@@ -339,7 +339,7 @@ test.describe('Checkout', () => {
     test.describe('End to end', () => {
         test(
             'Checkout-015: an order with several products can be completed',
-            { tag: ['@smoke'] },
+            { tag: ['@smoke', '@e2e'] },
             async ({
                 inventoryPage,
                 cartPage,
@@ -378,7 +378,7 @@ test.describe('Checkout', () => {
 
         test(
             'Checkout-016: going back after an order does not place a second order',
-            { tag: ['@regression', '@negative'] },
+            { tag: ['@negative'] },
             async ({ checkout, checkoutOverviewPage: overview, checkoutCompletePage: complete }) => {
                 // Assumed requirement: one order per checkout
                 knownBugInGate(KNOWN_BUGS.emptyOrder);

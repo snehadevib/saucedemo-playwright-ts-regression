@@ -19,7 +19,7 @@ test.describe('Receipt', () => {
 
     test(
         'Receipt-001: the order receipt downloads as a PDF',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ checkout, checkoutCompletePage: complete }) => {
             await checkout.placeOrder(typicalOrder.products, typicalOrder.customer);
 
@@ -45,7 +45,7 @@ test.describe('Receipt', () => {
     for (const scenario of ORDER_SCENARIOS) {
         test(
             `Receipt-002: the receipt matches the order (${scenario.name})`,
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ checkout, checkoutCompletePage: complete }, testInfo) => {
                 const { products, customer } = scenario;
                 const expected = expectedTotals(products);

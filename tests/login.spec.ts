@@ -32,7 +32,7 @@ test.describe('Login', () => {
 
     test(
         'Login-001: valid credentials open the inventory page',
-        { tag: ['@smoke'] },
+        { tag: ['@smoke', '@integration'] },
         async ({ loginPage, inventoryPage, page }) => {
             // Data-driven: every user in TEST_USERS must be able to log in (one step per user)
             for (const { username } of Object.values(TEST_USERS)) {
@@ -65,7 +65,7 @@ test.describe('Login', () => {
 
     test(
         'Login-003: a wrong password is refused with the invalid credentials error message',
-        { tag: ['@regression', '@negative'] },
+        { tag: ['@negative'] },
         async ({ loginPage }) => {
             await loginPage.login(USERS.standard, INVALID_CREDENTIALS.wrongPassword);
 
@@ -75,7 +75,7 @@ test.describe('Login', () => {
 
     test(
         'Login-004: an unknown username is refused with the invalid credentials error message',
-        { tag: ['@regression', '@negative'] },
+        { tag: ['@negative'] },
         async ({ loginPage }) => {
             await loginPage.login(INVALID_CREDENTIALS.unknownUsername, PASSWORD);
 
@@ -85,7 +85,7 @@ test.describe('Login', () => {
 
     test(
         'Login-005: empty username gets the username required error message',
-        { tag: ['@regression', '@fieldValidation'] },
+        { tag: ['@fieldLevel'] },
         async ({ loginPage }) => {
             await loginPage.login('', PASSWORD);
 
@@ -95,7 +95,7 @@ test.describe('Login', () => {
 
     test(
         'Login-006: empty password gets the password required error message',
-        { tag: ['@regression', '@fieldValidation'] },
+        { tag: ['@fieldLevel'] },
         async ({ loginPage }) => {
             await loginPage.login(USERS.standard, '');
 
@@ -105,7 +105,7 @@ test.describe('Login', () => {
 
     test(
         'Login-007: empty username and password gets the username required error message',
-        { tag: ['@regression', '@fieldValidation'] },
+        { tag: ['@fieldLevel'] },
         async ({ loginPage }) => {
             await loginPage.login('', '');
 
@@ -115,7 +115,7 @@ test.describe('Login', () => {
 
     test(
         'Login-008: protected pages cannot be opened without login',
-        { tag: ['@smoke', '@security'] },
+        { tag: ['@smoke', '@negative', '@security'] },
         async ({
             loginPage,
             inventoryPage,
@@ -146,7 +146,7 @@ test.describe('Login', () => {
 
     test(
         'Login-009: password input is masked',
-        { tag: ['@regression', '@fieldValidation'] },
+        { tag: ['@fieldLevel', '@security'] },
         async ({ loginPage }) => {
             await expect(loginPage.passwordInput).toHaveAttribute('type', 'password');
         },

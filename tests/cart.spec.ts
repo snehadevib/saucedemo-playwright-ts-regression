@@ -14,7 +14,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-001: adding a product from the inventory page updates its button and the cart badge',
-        { tag: ['@smoke'] },
+        { tag: ['@smoke', '@functional'] },
         async ({ inventoryPage }) => {
             const card = inventoryPage.productCard(first.name);
 
@@ -35,7 +35,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-002: a product removed on the inventory page can be added again',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             const card = inventoryPage.productCard(first.name);
             await inventoryPage.addToCart(first.name);
@@ -58,7 +58,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-003: all products can be added to the cart',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             for (const product of PRODUCTS) {
                 await test.step(`add: ${product.name}`, async () => {
@@ -78,7 +78,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-004: a product can be added on the product details page',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, productDetailsPage }) => {
             await test.step('open details by name', async () => {
                 await productDetailsPage.openBy(inventoryPage.productCard(first.name).nameLink);
@@ -108,7 +108,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-005: a product can be removed on the product details page',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, productDetailsPage }) => {
             await inventoryPage.addToCart(first.name);
 
@@ -143,7 +143,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-006: the cart page lists the added products',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, cartPage }) => {
             await inventoryPage.addToCart(first.name);
             await inventoryPage.addToCart(second.name);
@@ -172,7 +172,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-007: a product can be removed on the cart page',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, cartPage }) => {
             await inventoryPage.addToCart(first.name);
             await inventoryPage.addToCart(second.name);
@@ -210,7 +210,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-008: a product can be removed on its details page opened from the cart',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, cartPage, productDetailsPage }) => {
             await inventoryPage.addToCart(first.name);
 
@@ -245,7 +245,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-009: the empty cart page has no items',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage, cartPage }) => {
             await test.step('open cart (cart icon) with nothing added', async () => {
                 await cartPage.openBy(inventoryPage.cartLink);
@@ -268,7 +268,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-010: the cart is kept after a page reload',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             await inventoryPage.addToCart(first.name);
             await inventoryPage.addToCart(second.name);
@@ -291,7 +291,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-011: the cart is kept after changing the sort order',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             await inventoryPage.addToCart(first.name);
             await inventoryPage.addToCart(second.name);
@@ -314,7 +314,7 @@ test.describe('Cart', () => {
 
     test(
         'Cart-012: the cart is kept when moving between pages',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, productDetailsPage, cartPage }) => {
             await inventoryPage.addToCart(first.name);
             await inventoryPage.addToCart(second.name);

@@ -15,7 +15,7 @@ test.describe('Inventory', () => {
 
     test(
         'Inventory-002: products are sorted by Name (A to Z) by default',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             await expect(inventoryPage.sortDropdown, 'dropdown value is "az"').toHaveValue('az');
             await expect(inventoryPage.activeSortOption, 'label shows "Name (A to Z)"').toHaveText(
@@ -29,7 +29,7 @@ test.describe('Inventory', () => {
 
     test(
         'Inventory-001: all products are displayed with correct name, description, price, image and button',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             await test.step(`all ${PRODUCTS.length} products are displayed`, async () => {
                 await expect(inventoryPage.inventoryItems).toHaveCount(PRODUCTS.length);
@@ -62,7 +62,7 @@ test.describe('Inventory', () => {
 
     test(
         'Inventory-003: inventory page layout is displayed',
-        { tag: ['@smoke'] },
+        { tag: ['@smoke', '@functional', '@ui'] },
         async ({ inventoryPage }) => {
             await expect(inventoryPage.title, 'page title').toHaveText('Products');
             await expect(inventoryPage.appLogo, 'app logo').toBeVisible();
@@ -77,7 +77,7 @@ test.describe('Inventory', () => {
 
     test(
         'Inventory-004: all product images are loaded',
-        { tag: ['@regression', '@ui'] },
+        { tag: ['@functional', '@ui'] },
         async ({ inventoryPage }) => {
             for (const product of PRODUCTS) {
                 await test.step(`image: ${product.name}`, async () => {
@@ -102,7 +102,7 @@ test.describe('Inventory', () => {
         const pricesLowToHigh = asPriceText([...prices].sort((a, b) => a - b));
         const pricesHighToLow = asPriceText([...prices].sort((a, b) => b - a));
 
-        test('Inventory-005: sort by Name (Z to A)', { tag: ['@regression'] }, async ({ inventoryPage }) => {
+        test('Inventory-005: sort by Name (Z to A)', { tag: ['@functional'] }, async ({ inventoryPage }) => {
             await inventoryPage.sortBy('za');
 
             await expect(inventoryPage.activeSortOption, 'label').toHaveText('Name (Z to A)');
@@ -111,7 +111,7 @@ test.describe('Inventory', () => {
 
         test(
             'Inventory-006: sort by Price (low to high)',
-            { tag: ['@regression'] },
+            { tag: ['@functional'] },
             async ({ inventoryPage }) => {
                 await inventoryPage.sortBy('lohi');
 
@@ -122,7 +122,7 @@ test.describe('Inventory', () => {
 
         test(
             'Inventory-007: sort by Price (high to low)',
-            { tag: ['@regression'] },
+            { tag: ['@functional'] },
             async ({ inventoryPage }) => {
                 await inventoryPage.sortBy('hilo');
 
@@ -133,7 +133,7 @@ test.describe('Inventory', () => {
 
         test(
             'Inventory-008: sort order resets to Name (A to Z) after reload',
-            { tag: ['@regression'] },
+            { tag: ['@functional'] },
             async ({ inventoryPage, page }) => {
                 await test.step('sort Z to A', async () => {
                     await inventoryPage.sortBy('za');
@@ -184,7 +184,7 @@ test.describe('Inventory', () => {
 
         test(
             'Inventory-009: clicking a product name opens its details page',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ inventoryPage, productDetailsPage }) => {
                 await openEachProductBy('nameLink', inventoryPage, productDetailsPage);
             },
@@ -192,7 +192,7 @@ test.describe('Inventory', () => {
 
         test(
             'Inventory-010: clicking a product image opens its details page',
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({ inventoryPage, productDetailsPage }) => {
                 await openEachProductBy('imageLink', inventoryPage, productDetailsPage);
             },
@@ -201,7 +201,7 @@ test.describe('Inventory', () => {
 
     test(
         'Inventory-011: footer shows copyright and social links',
-        { tag: ['@regression', '@ui'] },
+        { tag: ['@functional', '@ui'] },
         async ({ inventoryPage }) => {
             await expect(inventoryPage.footerCopy, 'copyright text').toHaveText(FOOTER.copyright);
             await expect(inventoryPage.socialX, 'X link').toHaveAttribute('href', FOOTER.socialLinks.x);

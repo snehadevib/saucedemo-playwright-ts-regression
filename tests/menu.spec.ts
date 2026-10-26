@@ -66,7 +66,7 @@ test.describe('Menu', () => {
     for (const pageName of pageNames) {
         test(
             `Menu-001: the menu opens, lists all items and closes (${pageName} page)`,
-            { tag: ['@regression'] },
+            { tag: ['@functional'] },
             async ({
                 inventoryPage,
                 productDetailsPage,
@@ -111,7 +111,7 @@ test.describe('Menu', () => {
 
     test(
         'Menu-002: logout returns to the login page and Back does not re-enter',
-        { tag: ['@smoke', '@security'] },
+        { tag: ['@smoke', '@negative', '@security'] },
         async ({ inventoryPage, loginPage }) => {
             await test.step('logout', async () => {
                 await inventoryPage.menu.open();
@@ -132,7 +132,7 @@ test.describe('Menu', () => {
 
     test(
         'Menu-003: Reset App State empties the cart',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, cartPage }) => {
             await inventoryPage.addToCart(first.name);
 
@@ -151,7 +151,7 @@ test.describe('Menu', () => {
 
     test(
         'Menu-004: Reset App State resets the product buttons',
-        { tag: ['@regression'] },
+        { tag: ['@functional'] },
         async ({ inventoryPage }) => {
             // Confirmed by hand: the buttons only reset after a page reload
             knownBugInGate(KNOWN_BUGS.resetKeepsRemoveButtons);
@@ -170,7 +170,7 @@ test.describe('Menu', () => {
     for (const pageName of pageNames.filter((name) => name !== 'inventory')) {
         test(
             `Menu-005: All Items returns to the inventory page (${pageName} page)`,
-            { tag: ['@regression'] },
+            { tag: ['@integration'] },
             async ({
                 inventoryPage,
                 productDetailsPage,
@@ -205,7 +205,7 @@ test.describe('Menu', () => {
 
     test(
         'Menu-006: Dynamic Catalog opens its sub-menu and each entry opens its page',
-        { tag: ['@regression'] },
+        { tag: ['@integration'] },
         async ({ inventoryPage, dynamicCatalogPage }) => {
             await test.step('expand Dynamic Catalog: all entries are listed', async () => {
                 await inventoryPage.menu.openDynamicCatalog();

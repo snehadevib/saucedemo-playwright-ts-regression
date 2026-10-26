@@ -43,14 +43,31 @@ export class MenuComponent {
     // Open the menu and expand the Dynamic Catalog sub-menu
     async openDynamicCatalog() {
         await this.open();
-        await this.dynamicCatalogLink.click();
-        await this.dynamicCatalogEntries.first().waitFor({ state: 'visible' });
+        await this.clickUntilVisible(this.dynamicCatalogLink, this.dynamicCatalogEntries.first());
     }
 
     // Open the menu and wait until its entries are visible
     async open() {
-        await this.openButton.click();
-        await this.logoutLink.waitFor({ state: 'visible' });
+        await this.clickUntilVisible(this.openButton, this.logoutLink);
+    }
+
+    /**
+     * Click, then wait for the result; click again if it did not appear (at most 3 attempts).
+     * In WebKit a click right after a page appears is sometimes lost because the page's scripts
+     * are not ready yet; a user clicks a moment later and never notices. If the result never
+     * appears, the last error is reported as usual.
+     */
+    private async clickUntilVisible(button: Locator, result: Locator) {
+        const attempts = 3;
+        for (let attempt = 1; attempt <= attempts; attempt++) {
+            await button.click();
+            try {
+                await result.waitFor({ state: 'visible', timeout: 3_000 });
+                return;
+            } catch (error) {
+                if (attempt === attempts) throw error;
+            }
+        }
     }
 
     // Close the menu with the X and wait until it is hidden
