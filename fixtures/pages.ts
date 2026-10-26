@@ -6,6 +6,7 @@ import { CartPage } from '../pages/CartPage';
 import { CheckoutInformationPage } from '../pages/CheckoutInformationPage';
 import { CheckoutOverviewPage } from '../pages/CheckoutOverviewPage';
 import { CheckoutCompletePage } from '../pages/CheckoutCompletePage';
+import { DynamicCatalogPage } from '../pages/DynamicCatalogPage';
 import { CheckoutFlow } from '../flows/CheckoutFlow';
 
 /**
@@ -26,6 +27,8 @@ type PageFixtures = {
     checkoutOverviewPage: CheckoutOverviewPage;
     /** Checkout complete (https://www.saucedemo.com/checkout-complete.html). Not navigated automatically. */
     checkoutCompletePage: CheckoutCompletePage;
+    /** Dynamic Catalog demo pages (Lazy Load, Spinner, Slider). Opened through the menu. */
+    dynamicCatalogPage: DynamicCatalogPage;
     /** Checkout steps shared by checkout tests (add products, fill information, finish). Starts on inventory. */
     checkout: CheckoutFlow;
     /** Runs automatically: attaches a screenshot to tests marked with knownBugInGate (see fixtures/known-bugs.ts). */
@@ -73,6 +76,9 @@ export const test = base.extend<PageFixtures>({
     checkoutCompletePage: async ({ page }, use) => {
         await use(new CheckoutCompletePage(page));
     },
+    dynamicCatalogPage: async ({ page }, use) => {
+        await use(new DynamicCatalogPage(page));
+    },
     checkout: async (
         { inventoryPage, cartPage, checkoutInformationPage, checkoutOverviewPage, checkoutCompletePage },
         use,
@@ -100,3 +106,4 @@ export type { CartPage } from '../pages/CartPage';
 export type { CheckoutInformationPage } from '../pages/CheckoutInformationPage';
 export type { CheckoutOverviewPage } from '../pages/CheckoutOverviewPage';
 export type { CheckoutCompletePage } from '../pages/CheckoutCompletePage';
+export type { DynamicCatalogPage } from '../pages/DynamicCatalogPage';

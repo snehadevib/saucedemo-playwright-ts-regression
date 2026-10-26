@@ -26,6 +26,7 @@ export function knownBugInGate(bug: KnownBug | undefined) {
 
 /** Known bugs that make tests fail for standard_user. Remove an entry's usages when the issue is closed. */
 export const KNOWN_BUGS = {
+    resetKeepsRemoveButtons: { id: 'BUG-004', issue: 4 },
     itemTotalFormat: { id: 'BUG-011', issue: 11 },
     emptyOrder: { id: 'BUG-012', issue: 12 },
     stepsSkippableByUrl: { id: 'BUG-013', issue: 13 },

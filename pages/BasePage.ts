@@ -1,5 +1,6 @@
 import { test, errors, type Page, type Locator } from '@playwright/test';
 import { PAGE_LOAD } from '../test-data/performance';
+import { MenuComponent } from './components/MenuComponent';
 
 /**
  * Common parent class for all page objects.
@@ -17,14 +18,16 @@ export abstract class BasePage {
     // An element that is only shown once the page has loaded, e.g. the product list
     abstract readonly readyIndicator: Locator;
 
-    // Header parts shown on every logged-in page (inventory, details, cart)
+    // Header parts shown on every logged-in page (inventory, details, cart, checkout)
     readonly cartLink: Locator;
     readonly cartBadge: Locator;
+    readonly menu: MenuComponent;
 
     constructor(page: Page) {
         this.page = page;
         this.cartLink = page.getByTestId('shopping-cart-link');
         this.cartBadge = page.getByTestId('shopping-cart-badge');
+        this.menu = new MenuComponent(page);
     }
 
     // Open this page's URL directly, without waiting for it to load (e.g. to check that it is blocked)
