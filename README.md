@@ -9,7 +9,7 @@ Regression test suite for [SauceDemo](https://www.saucedemo.com), built with Pla
 | Area      | Tests          | What is covered                                                         | Bugs caught                                                  |
 | --------- | -------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------ |
 | Login     | 9              | Valid and invalid logins, required fields, protected pages, masking     | —                                                            |
-| Inventory | 11 + 1 planned | Product details, layout, images, sorting, footer, product details page  | BUG-001, 002, 005, 006, 007, 008, 009                        |
+| Inventory | 11 + 1 planned | Product details, layout, images, sorting, footer, product details page  | BUG-001, 002, 006, 007, 008, 009; BUG-005 (planned test)     |
 | Cart      | 12             | Add and remove on every page, badge, cart page, state across pages      | BUG-003, 006, 010                                            |
 | Checkout  | 16             | Required fields, totals and tax, cancel paths, direct URLs, end to end  | BUG-003, 011, 012, 013, 014, 015, 016, 017                   |
 | Receipt   | 2              | PDF download and its content against the order                          | BUG-015, 017                                                 |
