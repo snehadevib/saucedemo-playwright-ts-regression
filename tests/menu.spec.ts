@@ -93,7 +93,7 @@ test.describe('Menu', () => {
                 const { menu } = currentPage;
 
                 await test.step('open the menu: all items are listed', async () => {
-                    await menu.open();
+                    await menu.openWith(menu.logoutLink);
                     await expect(menu.items, 'menu items in order').toHaveText([...MENU_ITEMS]);
                     await expect(menu.aboutLink, 'About leads to the Sauce Labs website').toHaveAttribute(
                         'href',
@@ -114,7 +114,7 @@ test.describe('Menu', () => {
         { tag: ['@smoke', '@negative', '@security'] },
         async ({ inventoryPage, loginPage }) => {
             await test.step('logout', async () => {
-                await inventoryPage.menu.open();
+                await inventoryPage.menu.openWith(inventoryPage.menu.logoutLink);
                 await loginPage.openBy(inventoryPage.menu.logoutLink);
                 await expect(loginPage.page, 'on the login page').toHaveURL(loginPage.path);
             });
@@ -195,7 +195,7 @@ test.describe('Menu', () => {
                     PAGES[pageName](fixtures));
 
                 await test.step('All Items', async () => {
-                    await currentPage.menu.open();
+                    await currentPage.menu.openWith(currentPage.menu.allItemsLink);
                     await inventoryPage.openBy(currentPage.menu.allItemsLink);
                     await expect(inventoryPage.title, 'inventory page title').toHaveText('Products');
                 });

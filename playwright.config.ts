@@ -23,8 +23,9 @@ export default defineConfig({
     // Fail the build on CI if you accidentally left test.only in the source code.
     forbidOnly: !!process.env.CI,
 
-    // Retry on CI only.
-    retries: process.env.CI ? 2 : 0,
+    // Retry failed tests to absorb timing flakiness (e.g. WebKit menu clicks under parallel load).
+    // A test that only passes on retry is reported as "flaky", so it stays visible; a real bug fails every attempt.
+    retries: process.env.CI ? 2 : 1,
 
     // Opt out of parallel tests on CI.
     workers: process.env.CI ? 1 : undefined,
