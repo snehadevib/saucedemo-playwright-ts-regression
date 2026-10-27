@@ -1,6 +1,7 @@
 import { test, expect, type LoginPage } from '../fixtures/pages';
 import { USERS, PASSWORD, TEST_USERS, INVALID_CREDENTIALS } from '../test-data/users';
 import { LOGIN_ERRORS } from '../test-data/messages';
+import { PAGE_LOAD } from '../test-data/performance';
 
 /**
  * Shared checks for all failed login attempts.
@@ -44,7 +45,7 @@ test.describe('Login', () => {
                     await expect.soft(page, 'inventory page opens').toHaveURL(/inventory\.html/);
                     await expect
                         .soft(inventoryPage.inventoryItems.first(), 'products are shown')
-                        .toBeVisible();
+                        .toBeVisible({ timeout: PAGE_LOAD.failAfterMs });
 
                     // Log out for the next user: the session is only a cookie
                     await page.context().clearCookies();
