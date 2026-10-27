@@ -1,0 +1,55 @@
+name: Playwright tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_users:
+        description: 'Also run the defect runs (other users, expected to fail)'
+        type: boolean
+        default: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:gate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gate-report
+          path: playwright-report/
+          retention-days: 14
+
+  users:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_users
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    continue-on-error: true # these runs show the known defects, so failures are expected
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:users
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: users-report
+          path: playwright-report/
+          retention-days: 14
